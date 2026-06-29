@@ -1,0 +1,128 @@
+@import "tailwindcss" source(none);
+@source "../src";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --radius-2xl: calc(var(--radius) + 8px);
+  --radius-3xl: calc(var(--radius) + 12px);
+  --radius-4xl: calc(var(--radius) + 16px);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+
+  --color-ink: var(--ink);
+  --color-ink-soft: var(--ink-soft);
+  --color-canvas: var(--canvas);
+  --color-surface: var(--surface);
+
+  --color-brand-yellow: var(--brand-yellow);
+  --color-brand-pink: var(--brand-pink);
+  --color-brand-green: var(--brand-green);
+  --color-brand-purple: var(--brand-purple);
+  --color-brand-cream: var(--brand-cream);
+
+  --font-sans: "Inter", "SF Pro Display", system-ui, sans-serif;
+  --font-display: "Inter", "SF Pro Display", system-ui, sans-serif;
+
+  --shadow-soft: 0 4px 24px -8px oklch(0.2 0.02 280 / 0.08);
+  --shadow-card: 0 8px 32px -12px oklch(0.2 0.02 280 / 0.12);
+  --shadow-lift: 0 20px 48px -16px oklch(0.2 0.02 280 / 0.18);
+  --shadow-glow-dark: inset 0 0 0 1px oklch(1 0 0 / 0.06), 0 0 24px -4px oklch(1 0 0 / 0.08);
+}
+
+:root {
+  --radius: 1rem;
+
+  --canvas: oklch(0.965 0.005 310);            /* #F6F4F8 */
+  --surface: oklch(1 0 0);
+  --ink: oklch(0.18 0 0);                       /* #111111 */
+  --ink-soft: oklch(0.52 0.008 280);            /* #6F6F78 */
+
+  --background: var(--canvas);
+  --foreground: var(--ink);
+  --card: oklch(1 0 0);
+  --card-foreground: var(--ink);
+  --popover: oklch(1 0 0);
+  --popover-foreground: var(--ink);
+  --primary: oklch(0.18 0 0);
+  --primary-foreground: oklch(1 0 0);
+  --secondary: oklch(0.95 0.005 310);
+  --secondary-foreground: var(--ink);
+  --muted: oklch(0.95 0.005 310);
+  --muted-foreground: var(--ink-soft);
+  --accent: oklch(0.94 0.01 310);
+  --accent-foreground: var(--ink);
+  --destructive: oklch(0.62 0.22 25);
+  --destructive-foreground: oklch(1 0 0);
+  --border: oklch(0.92 0.005 310);
+  --input: oklch(0.92 0.005 310);
+  --ring: oklch(0.6 0.05 310);
+
+  --sidebar: oklch(0.13 0.005 280);             /* near #0B0B0E */
+  --sidebar-foreground: oklch(0.98 0 0);
+
+  --brand-yellow: oklch(0.9 0.16 95);           /* #FFD84D */
+  --brand-pink: oklch(0.81 0.12 350);           /* #F3A9D8 */
+  --brand-green: oklch(0.82 0.16 155);          /* #57D48D */
+  --brand-purple: oklch(0.77 0.13 315);         /* #C88CE8 */
+  --brand-cream: oklch(0.93 0.06 95);           /* #F3E7B5 */
+}
+
+@layer base {
+  * {
+    border-color: var(--color-border);
+  }
+  html, body {
+    background-color: var(--color-canvas);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    font-weight: 500;
+    -webkit-font-smoothing: antialiased;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    font-weight: 700;
+    letter-spacing: -0.02em;
+  }
+}
+
+@utility glow-dark {
+  box-shadow: var(--shadow-glow-dark);
+}
+@utility shadow-soft {
+  box-shadow: var(--shadow-soft);
+}
+@utility shadow-card {
+  box-shadow: var(--shadow-card);
+}
+@utility shadow-lift {
+  box-shadow: var(--shadow-lift);
+}
+
+@utility scrollbar-none {
+  &::-webkit-scrollbar { display: none; }
+  scrollbar-width: none;
+}

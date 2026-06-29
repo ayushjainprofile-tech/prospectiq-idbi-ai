@@ -14,7 +14,7 @@ from pydantic import BaseModel
 from dotenv import load_dotenv
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_core.chat_history import InMemoryChatMessageHistory
-from langchain.messages import SystemMessage
+from langchain_core.messages import SystemMessage
 from config import SYSTEM_PROMPT
 from lead_scorer import score_prospect, get_tag
 

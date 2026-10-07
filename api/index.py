@@ -130,17 +130,22 @@ async def chat_endpoint(request: ChatRequest):
                     pass
 
         elif provider == "gemini" and gemini_key:
-            try:
-                url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key={gemini_key}"
-                contents = [{"role": "user" if m.type == "user" else "model", "parts": [{"text": m.content}]} for m in recent_messages]
-                payload = {"contents": contents, "systemInstruction": {"parts": [{"text": SYSTEM_PROMPT}]}}
-                res = requests.post(url, json=payload, timeout=5)
-                if res.status_code == 200:
-                    full_response = res.json()['candidates'][0]['content']['parts'][0]['text']
-                else:
-                    full_response = f"DEBUG_API_ERROR: {res.status_code} - {res.text}"
-            except Exception as e:
-                full_response = f"DEBUG_CODE_ERROR: {str(e)}"
+            gemini_models = ["gemini-pro", "gemini-1.5-flash-latest", "gemini-1.0-pro"]
+            for gmodel in gemini_models:
+                if full_response:
+                    break
+                try:
+                    url = f"https://generativelanguage.googleapis.com/v1beta/models/{gmodel}:generateContent?key={gemini_key}"
+                    contents = [{"role": "user" if m.type == "user" else "model", "parts": [{"text": m.content}]} for m in recent_messages]
+                    payload = {"contents": contents, "systemInstruction": {"parts": [{"text": SYSTEM_PROMPT}]}}
+                    res = requests.post(url, json=payload, timeout=8)
+                    if res.status_code == 200:
+                        full_response = res.json()['candidates'][0]['content']['parts'][0]['text']
+                    elif res.status_code != 404:
+                        full_response = f"DEBUG_API_ERROR: {res.status_code} - {res.text[:200]}"
+                        break
+                except Exception as e:
+                    pass
 
     try:
         if not full_response:

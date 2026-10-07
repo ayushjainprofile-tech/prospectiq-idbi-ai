@@ -133,25 +133,32 @@ async def chat_endpoint(request: ChatRequest):
             gemini_configs = [
                 ("v1beta", "gemini-2.0-flash"),
                 ("v1beta", "gemini-1.5-flash"),
-                ("v1", "gemini-pro"),
                 ("v1beta", "gemini-pro"),
+                ("v1", "gemini-pro"),
                 ("v1beta", "gemini-1.0-pro"),
             ]
             for api_ver, gmodel in gemini_configs:
                 if full_response:
                     break
-                try:
-                    url = f"https://generativelanguage.googleapis.com/{api_ver}/models/{gmodel}:generateContent?key={gemini_key}"
-                    contents = [{"role": "user" if m.type == "user" else "model", "parts": [{"text": m.content}]} for m in recent_messages]
-                    payload = {"contents": contents, "systemInstruction": {"parts": [{"text": SYSTEM_PROMPT}]}}
-                    res = requests.post(url, json=payload, timeout=8)
-                    if res.status_code == 200:
-                        full_response = res.json()['candidates'][0]['content']['parts'][0]['text']
-                    elif res.status_code not in [404, 400]:
-                        full_response = f"DEBUG_API_ERROR({gmodel}): {res.status_code} - {res.text[:150]}"
+                # Try both API key (AIza keys) and Bearer token (AQ.A keys)
+                auth_methods = [
+                    {"url": f"https://generativelanguage.googleapis.com/{api_ver}/models/{gmodel}:generateContent?key={gemini_key}", "headers": {}},
+                    {"url": f"https://generativelanguage.googleapis.com/{api_ver}/models/{gmodel}:generateContent", "headers": {"Authorization": f"Bearer {gemini_key}"}},
+                ]
+                for auth in auth_methods:
+                    if full_response:
                         break
-                except Exception as e:
-                    pass
+                    try:
+                        contents = [{"role": "user" if m.type == "user" else "model", "parts": [{"text": m.content}]} for m in recent_messages]
+                        payload = {"contents": contents, "systemInstruction": {"parts": [{"text": SYSTEM_PROMPT}]}}
+                        res = requests.post(auth["url"], json=payload, headers=auth["headers"], timeout=8)
+                        if res.status_code == 200:
+                            full_response = res.json()['candidates'][0]['content']['parts'][0]['text']
+                        elif res.status_code not in [404, 400, 401, 403]:
+                            full_response = f"DEBUG({gmodel}): {res.status_code} - {res.text[:100]}"
+                            break
+                    except Exception as e:
+                        pass
 
     try:
         if not full_response:

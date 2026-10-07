@@ -131,7 +131,7 @@ async def chat_endpoint(request: ChatRequest):
 
         elif provider == "gemini" and gemini_key:
             try:
-                url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key={gemini_key}"
+                url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key={gemini_key}"
                 contents = [{"role": "user" if m.type == "user" else "model", "parts": [{"text": m.content}]} for m in recent_messages]
                 payload = {"contents": contents, "systemInstruction": {"parts": [{"text": SYSTEM_PROMPT}]}}
                 res = requests.post(url, json=payload, timeout=5)

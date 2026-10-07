@@ -129,16 +129,21 @@ async def chat_endpoint(request: ChatRequest):
                 except Exception:
                     pass
 
-        elif provider == "gemini" and gemini_key and gemini_key.startswith("AIza"):
-            try:
-                url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key={gemini_key}"
-                contents = [{"role": "user" if m.type == "user" else "model", "parts": [{"text": m.content}]} for m in recent_messages]
-                payload = {"contents": contents, "systemInstruction": {"parts": [{"text": SYSTEM_PROMPT}]}}
-                res = requests.post(url, json=payload, timeout=5)
-                if res.status_code == 200:
-                    full_response = res.json()['candidates'][0]['content']['parts'][0]['text']
-            except Exception:
-                pass
+        elif provider == "gemini" and gemini_key:
+            if not gemini_key.startswith("AIza"):
+                full_response = f"DEBUG: Invalid API Key format. Key starts with {gemini_key[:4]}"
+            else:
+                try:
+                    url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key={gemini_key}"
+                    contents = [{"role": "user" if m.type == "user" else "model", "parts": [{"text": m.content}]} for m in recent_messages]
+                    payload = {"contents": contents, "systemInstruction": {"parts": [{"text": SYSTEM_PROMPT}]}}
+                    res = requests.post(url, json=payload, timeout=5)
+                    if res.status_code == 200:
+                        full_response = res.json()['candidates'][0]['content']['parts'][0]['text']
+                    else:
+                        full_response = f"DEBUG_API_ERROR: {res.status_code} - {res.text}"
+                except Exception as e:
+                    full_response = f"DEBUG_CODE_ERROR: {str(e)}"
 
     try:
         if not full_response:

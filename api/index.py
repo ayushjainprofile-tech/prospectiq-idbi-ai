@@ -92,7 +92,7 @@ async def chat_endpoint(request: ChatRequest):
     if is_complex_query or is_lead_data:
         provider_order = ["groq", "openai", "gemini"]
     else:
-        provider_order = ["groq", "gemini", "openai"]
+        provider_order = ["groq", "openai", "gemini"]
 
     for provider in provider_order:
         if full_response:

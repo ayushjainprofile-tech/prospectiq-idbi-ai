@@ -201,7 +201,7 @@ async def chat_endpoint(request: ChatRequest):
             reply_text = "[STAGE:engage] We offer a variety of tailored loans including Home Loans (8.45%), Auto Loans (8.75%), and Personal Loans (10.75%). Which loan type suits your current requirement best?"
         elif "account" in user_msg_lower or "savings" in user_msg_lower or "fd" in user_msg_lower:
             reply_text = "[STAGE:engage] Our IDBI Super Savings Account gives up to 4% p.a. interest with zero-balance facilities! Would you like to open an account or know more about our 7.25% FD rates?"
-        elif "hello" in user_msg_lower or "hi" in user_msg_lower or "hey" in user_msg_lower or "namaste" in user_msg_lower:
+        elif any(word in re.findall(r'\b\w+\b', user_msg_lower) for word in ["hello", "hi", "hey", "namaste"]):
             reply_text = "[STAGE:identify] Namaste! 🙏 Welcome to IDBI Bank ProspectIQ. I am your personal AI Relationship Manager. How can I help you with your financial goals today?"
         else:
             reply_text = f"[STAGE:engage] Thanks for asking about '{request.message}'. IDBI Bank provides customized solutions for all your banking needs. Could you tell me a bit more about your requirement or share your contact info for a personalized quote?"

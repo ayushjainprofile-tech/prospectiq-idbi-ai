@@ -223,8 +223,18 @@ async def chat_endpoint(request: ChatRequest):
             reply_text = "[STAGE:engage] Our IDBI Super Savings Account gives up to 4% p.a. interest with zero-balance facilities! Would you like to open an account or know more about our 7.25% FD rates?"
         elif any(word in re.findall(r'\b\w+\b', user_msg_lower) for word in ["hello", "hi", "hey", "namaste"]):
             reply_text = "[STAGE:identify] Namaste! 🙏 Welcome to IDBI Bank ProspectIQ. I am your personal AI Relationship Manager. How can I help you with your financial goals today?"
+        elif any(word in user_msg_lower for word in ["naam", "name", "kaun", "who are you", "tumhara", "aap kaun", "bot", "ai", "assistant"]):
+            reply_text = "[STAGE:identify] Main ProspectIQ hoon 🤖 — IDBI Bank ka AI Financial Advisor! Aapki banking zarooratein samajhna aur best solution dhundna mera kaam hai. Aap mujhse Home Loan, FD rates, Savings Account ya kisi bhi banking product ke baare mein pooch sakte hain! Aapko aaj kisme madad chahiye?"
+        elif any(word in user_msg_lower for word in ["credit card", "card", "credit"]):
+            reply_text = "[STAGE:engage] IDBI Bank ke Credit Cards mein aapko milega — zero joining fee, 5% cashback on shopping, aur complimentary airport lounge access! Aapki monthly spending kitni hoti hai? Main aapke liye best card suggest kar sakta hoon."
+        elif any(word in user_msg_lower for word in ["demat", "share", "stock", "invest"]):
+            reply_text = "[STAGE:engage] IDBI Bank ka 3-in-1 Demat Account kholo — Trading + Demat + Savings ek saath! Zero AMC first year ke liye. Kya aap stock market mein naye hain ya experience hai?"
+        elif any(word in user_msg_lower for word in ["nri", "abroad", "foreign", "overseas"]):
+            reply_text = "[STAGE:engage] NRI banking ke liye IDBI ka NRE/NRO account best option hai — tax-free interest on NRE deposits aur easy fund repatriation! Aap kis country mein hain?"
+        elif any(word in user_msg_lower for word in ["insurance", "bima"]):
+            reply_text = "[STAGE:engage] IDBI Federal Life Insurance ke saath aapko milega term life cover ₹1 crore sirf ₹500/month mein! Kya aap life cover ya health insurance ke baare mein jaanna chahte hain?"
         else:
-            reply_text = f"[STAGE:engage] Thanks for asking about '{request.message}'. IDBI Bank provides customized solutions for all your banking needs. Could you tell me a bit more about your requirement or share your contact info for a personalized quote?"
+            reply_text = "[STAGE:identify] Main ProspectIQ hoon — IDBI Bank ka AI Relationship Manager! Aap mujhse Home Loan, Savings Account, FD rates, Credit Card ya koi bhi banking sawaal pooch sakte hain. Aapko aaj kisme madad chahiye?"
 
         stage, clean_response = extract_stage(reply_text)
         memory.add_ai_message(reply_text)
